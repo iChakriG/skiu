@@ -10,12 +10,18 @@ export default function Home() {
         <p className="text-center text-gray-600 mb-6">
           Your modern e-commerce platform
         </p>
-        <p className="text-center">
+        <p className="text-center space-x-4">
+          <Link
+            href="/login"
+            className="text-slate-600 underline hover:text-slate-900"
+          >
+            Sign in
+          </Link>
           <Link
             href="/admin"
             className="text-slate-600 underline hover:text-slate-900"
           >
-            Open admin →
+            Admin →
           </Link>
         </p>
       </div>

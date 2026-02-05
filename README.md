@@ -79,6 +79,16 @@ The admin UI at **[/admin](http://localhost:3000/admin)** is protected by **Supa
 2. Open [http://localhost:3000/admin](http://localhost:3000/admin); you’ll be redirected to `/admin/login`.
 3. Sign in with that user. Only authenticated users can access admin pages and admin API routes (product create/update/delete, all orders, order status update).
 
+### Storefront login
+
+The e-commerce website supports **customer sign-in** with the same Supabase Auth:
+
+- **[/login](http://localhost:3000/login)** — Sign in (email/password). Use `?returnTo=...` to redirect after login.
+- **[/signup](http://localhost:3000/signup)** — Create an account; Supabase can send a confirmation email depending on your project settings.
+- **[/account](http://localhost:3000/account)** — Account page (email, sign out); requires sign-in (redirects to login if not authenticated).
+
+The storefront header shows **Sign in** / **Sign up** when logged out, and **Account** / **Sign out** when logged in.
+
 ### Mobile app (optional)
 
 The app in `mobile/` uses the API for products, cart, and orders.
