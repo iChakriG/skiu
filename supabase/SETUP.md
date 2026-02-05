@@ -10,7 +10,13 @@ In [Supabase Dashboard](https://supabase.com/dashboard) → your project → **S
 2. Run the seed (copy/paste and run):
    - Open `migrations/002_seed_data.sql`, copy all, paste in SQL Editor, run.
 
-This creates the `products`, `carts`, and `orders` tables and inserts 5 sample products.
+This creates the `products`, `carts`, and `orders` tables and inserts 10 sample products.
+
+3. **(Optional)** To upload product images and sync seed data from the repo, run from project root:
+   ```bash
+   npm run seed
+   ```
+   This creates the `product-images` storage bucket (if needed), uploads images from `scripts/product-images/`, and upserts all 10 products with image URLs.
 
 ## 2. Enable authentication
 
