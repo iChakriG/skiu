@@ -1,6 +1,6 @@
 # API routes
 
-REST endpoints used by the mobile app.
+REST API endpoints (products, cart, orders, health).
 
 | Path | Methods | Notes |
 |------|--------|--------|
