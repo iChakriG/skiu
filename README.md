@@ -61,9 +61,9 @@ Full map: **[STRUCTURE.md](STRUCTURE.md)**.
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon key  
    - `SUPABASE_SERVICE_ROLE_KEY` — Supabase service role key (if needed)
 
-3. **Database**
-   - In the [Supabase Dashboard](https://supabase.com/dashboard) → SQL Editor, run:
-   - `supabase/migrations/001_initial_schema.sql`
+3. **Database and auth**
+   - Run the migrations in Supabase SQL Editor: `supabase/migrations/001_initial_schema.sql`, then `supabase/migrations/002_seed_data.sql` (adds sample products).
+   - Enable Email auth and create an admin user — see **[supabase/SETUP.md](supabase/SETUP.md)** for step-by-step DB and authentication setup.
 
 4. **Run the app**
    ```bash

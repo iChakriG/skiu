@@ -1,10 +1,14 @@
 import { IProductRepository } from "@/domain/repositories/IProductRepository";
 import { Product, ProductFilters } from "@/domain/entities/Product";
-import { supabase } from "../database/supabase";
+import { getSupabaseAdmin } from "../database/supabase";
 
 export class ProductRepository implements IProductRepository {
+  private getClient() {
+    return getSupabaseAdmin();
+  }
+
   async findById(id: string): Promise<Product | null> {
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from("products")
       .select("*")
       .eq("id", id)
@@ -16,7 +20,7 @@ export class ProductRepository implements IProductRepository {
   }
 
   async findAll(filters?: ProductFilters): Promise<Product[]> {
-    let query = supabase.from("products").select("*");
+    let query = this.getClient().from("products").select("*");
 
     if (filters?.category) {
       query = query.eq("category", filters.category);
@@ -42,7 +46,7 @@ export class ProductRepository implements IProductRepository {
   }
 
   async create(product: Omit<Product, "id" | "createdAt" | "updatedAt">): Promise<Product> {
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from("products")
       .insert({
         name: product.name,
@@ -72,7 +76,7 @@ export class ProductRepository implements IProductRepository {
     if (product.category !== undefined) updateData.category = product.category;
     if (product.stock !== undefined) updateData.stock = product.stock;
 
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from("products")
       .update(updateData)
       .eq("id", id)
@@ -87,7 +91,7 @@ export class ProductRepository implements IProductRepository {
   }
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase.from("products").delete().eq("id", id);
+    const { error } = await this.getClient().from("products").delete().eq("id", id);
 
     if (error) {
       throw new Error(`Failed to delete product: ${error.message}`);

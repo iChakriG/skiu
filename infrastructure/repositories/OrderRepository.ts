@@ -1,10 +1,14 @@
 import { IOrderRepository } from "@/domain/repositories/IOrderRepository";
 import { Order } from "@/domain/entities/Order";
-import { supabase } from "../database/supabase";
+import { getSupabaseAdmin } from "../database/supabase";
 
 export class OrderRepository implements IOrderRepository {
+  private getClient() {
+    return getSupabaseAdmin();
+  }
+
   async findById(id: string): Promise<Order | null> {
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from("orders")
       .select("*")
       .eq("id", id)
@@ -16,7 +20,7 @@ export class OrderRepository implements IOrderRepository {
   }
 
   async findAll(): Promise<Order[]> {
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from("orders")
       .select("*")
       .order("created_at", { ascending: false });
@@ -27,7 +31,7 @@ export class OrderRepository implements IOrderRepository {
   }
 
   async findByUserId(userId: string): Promise<Order[]> {
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from("orders")
       .select("*")
       .eq("user_id", userId)
@@ -39,7 +43,7 @@ export class OrderRepository implements IOrderRepository {
   }
 
   async create(order: Omit<Order, "id" | "createdAt" | "updatedAt">): Promise<Order> {
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from("orders")
       .insert({
         user_id: order.userId,
@@ -59,7 +63,7 @@ export class OrderRepository implements IOrderRepository {
   }
 
   async updateStatus(id: string, status: Order["status"]): Promise<Order> {
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from("orders")
       .update({
         status,

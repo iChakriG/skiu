@@ -1,10 +1,14 @@
 import { ICartRepository } from "@/domain/repositories/ICartRepository";
 import { Cart, CartItem } from "@/domain/entities/Cart";
-import { supabase } from "../database/supabase";
+import { getSupabaseAdmin } from "../database/supabase";
 
 export class CartRepository implements ICartRepository {
+  private getClient() {
+    return getSupabaseAdmin();
+  }
+
   async findByUserId(userId: string): Promise<Cart | null> {
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from("carts")
       .select("*")
       .eq("user_id", userId)
@@ -16,7 +20,7 @@ export class CartRepository implements ICartRepository {
   }
 
   async create(cart: Omit<Cart, "id" | "createdAt" | "updatedAt">): Promise<Cart> {
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from("carts")
       .insert({
         user_id: cart.userId,
@@ -36,7 +40,7 @@ export class CartRepository implements ICartRepository {
   async update(cartId: string, items: CartItem[]): Promise<Cart> {
     const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    const { data, error } = await supabase
+    const { data, error } = await this.getClient()
       .from("carts")
       .update({
         items,
@@ -55,7 +59,7 @@ export class CartRepository implements ICartRepository {
   }
 
   async clear(cartId: string): Promise<void> {
-    const { error } = await supabase
+    const { error } = await this.getClient()
       .from("carts")
       .update({
         items: [],
@@ -70,7 +74,7 @@ export class CartRepository implements ICartRepository {
   }
 
   async delete(cartId: string): Promise<void> {
-    const { error } = await supabase.from("carts").delete().eq("id", cartId);
+    const { error } = await this.getClient().from("carts").delete().eq("id", cartId);
 
     if (error) {
       throw new Error(`Failed to delete cart: ${error.message}`);
