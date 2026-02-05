@@ -13,27 +13,17 @@ A modern e-commerce platform built with Next.js, TypeScript, Tailwind CSS, and S
 
 ## 📁 Project Structure
 
-```
-skiu/
-├── app/                    # Next.js app directory
-│   ├── api/               # API routes for mobile apps
-│   │   ├── products/      # Product endpoints
-│   │   ├── cart/          # Cart endpoints
-│   │   └── orders/         # Order endpoints
-│   ├── globals.css        # Global styles
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Home page
-├── domain/                # Domain layer (business logic)
-│   ├── entities/          # Domain entities
-│   └── repositories/      # Repository interfaces
-├── application/           # Application layer (use cases)
-│   └── use-cases/         # Business use cases
-├── infrastructure/        # Infrastructure layer
-│   ├── database/          # Database configuration
-│   └── repositories/      # Repository implementations
-└── supabase/              # Database migrations
-    └── migrations/
-```
+| Folder | Purpose |
+|--------|--------|
+| **app/** | Next.js app: pages, layout, **API routes** (products, cart, orders) |
+| **domain/** | Entities (Product, Order, Cart, User) and repository **interfaces** |
+| **application/** | **Use cases** (GetProducts, AddToCart, CreateOrder, etc.) |
+| **infrastructure/** | Supabase client and repository **implementations** |
+| **lib/** | Shared utilities |
+| **mobile/** | React Native (Expo) app — see [mobile/README.md](mobile/README.md) |
+| **supabase/** | SQL migrations |
+
+Full map and “where to find…” guide: **[STRUCTURE.md](STRUCTURE.md)**.
 
 ## 🛠️ Setup
 
