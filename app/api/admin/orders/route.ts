@@ -1,9 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/route-handler";
 import { GetAllOrdersUseCase } from "@/application/use-cases/GetAllOrdersUseCase";
 import { OrderRepository } from "@/infrastructure/repositories/OrderRepository";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const supabase = await createClient(request);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const orderRepository = new OrderRepository();
     const getAllOrdersUseCase = new GetAllOrdersUseCase(orderRepository);
     const orders = await getAllOrdersUseCase.execute();

@@ -18,7 +18,8 @@ A full-stack e-commerce platform with a **Next.js API** and a **React Native (Ex
 - **TypeScript** — End-to-end type safety
 - **RESTful API** — Products, cart, and orders; consumed by the mobile app
 - **React Native (Expo)** — Cross-platform mobile app in `mobile/`
-- **Supabase** — PostgreSQL database and optional auth
+- **Supabase** — PostgreSQL database and auth for admin
+- **Admin tool** — Dashboard, products CRUD, orders; protected by Supabase Auth (email/password)
 - **Vercel-ready** — Configured for one-click deploy
 
 ## Project structure
@@ -69,6 +70,14 @@ Full map and “where to find…” guide: **[STRUCTURE.md](STRUCTURE.md)**.
    npm run dev
    ```
    API: [http://localhost:3000](http://localhost:3000)
+
+### Admin tool
+
+The admin UI at **[/admin](http://localhost:3000/admin)** is protected by **Supabase Auth**. To sign in:
+
+1. In the [Supabase Dashboard](https://supabase.com/dashboard) → Authentication → Users, create a user (email + password) or enable Email sign-in.
+2. Open [http://localhost:3000/admin](http://localhost:3000/admin); you’ll be redirected to `/admin/login`.
+3. Sign in with that user. Only authenticated users can access admin pages and admin API routes (product create/update/delete, all orders, order status update).
 
 ### Mobile app (optional)
 

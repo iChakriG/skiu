@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/route-handler";
 import { GetProductsUseCase } from "@/application/use-cases/GetProductsUseCase";
 import { CreateProductUseCase } from "@/application/use-cases/CreateProductUseCase";
 import { ProductRepository } from "@/infrastructure/repositories/ProductRepository";
@@ -41,6 +42,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const supabase = await createClient(request);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const { name, description, price, imageUrl, category, stock } = body;
 
