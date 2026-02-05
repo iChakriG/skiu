@@ -7,9 +7,9 @@ Thank you for your interest in contributing to Skiu!
 1. Fork the repository
 2. Clone your fork
 3. Install dependencies: `npm install`
-4. Set up environment variables (see README.md)
-5. Run migrations in Supabase
-6. Start development server: `npm run dev`
+4. Set up environment variables: copy `apps/web/.env.example` to `apps/web/.env` (see README)
+5. Run migrations in Supabase (see README)
+6. Start development server: `npm run dev` (runs the web app in `apps/web`)
 
 ## Architecture Guidelines
 

@@ -24,17 +24,16 @@ A full-stack e-commerce platform with a **Next.js API** and a **React Native (Ex
 
 ## Project structure
 
+Each app lives in its own folder under `apps/`:
+
 | Folder | Purpose |
 |--------|--------|
-| **app/** | Next.js app: pages, layout, **API routes** (products, cart, orders) |
-| **domain/** | Entities (Product, Order, Cart, User) and repository **interfaces** |
-| **application/** | **Use cases** (GetProducts, AddToCart, CreateOrder, etc.) |
-| **infrastructure/** | Supabase client and repository **implementations** |
-| **lib/** | Shared utilities |
-| **mobile/** | React Native (Expo) app — [mobile/README.md](mobile/README.md) |
-| **supabase/** | SQL migrations |
+| **apps/web/** | Next.js app: **e-commerce storefront** (/, /login, /signup, /account), **admin panel** (/admin), and **REST API** (products, cart, orders). See [apps/web/README.md](apps/web/README.md). |
+| **apps/mobile/** | React Native (Expo) app — [apps/mobile/README.md](apps/mobile/README.md) |
 
-Full map and “where to find…” guide: **[STRUCTURE.md](STRUCTURE.md)**.
+Inside `apps/web/`: `app/` (routes + API), `domain/`, `application/`, `infrastructure/`, `lib/`, `supabase/`.
+
+Full map: **[STRUCTURE.md](STRUCTURE.md)**.
 
 ## Setup
 
@@ -43,7 +42,7 @@ Full map and “where to find…” guide: **[STRUCTURE.md](STRUCTURE.md)**.
 - **Node.js 18+** and npm
 - **Supabase** account and project (for the API)
 
-### Backend (Next.js API)
+### Web app (storefront + admin + API)
 
 1. **Clone and install**
    ```bash
@@ -54,22 +53,22 @@ Full map and “where to find…” guide: **[STRUCTURE.md](STRUCTURE.md)**.
 
 2. **Environment variables**
    ```bash
-   cp .env.example .env
+   cp apps/web/.env.example apps/web/.env
    ```
-   Set in `.env`:
+   Set in `apps/web/.env`:
    - `NEXT_PUBLIC_SUPABASE_URL` — your Supabase project URL  
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon key  
    - `SUPABASE_SERVICE_ROLE_KEY` — Supabase service role key (if needed)
 
 3. **Database**
    - In the [Supabase Dashboard](https://supabase.com/dashboard) → SQL Editor, run:
-   - `supabase/migrations/001_initial_schema.sql`
+   - `apps/web/supabase/migrations/001_initial_schema.sql`
 
-4. **Run the API**
+4. **Run the web app**
    ```bash
    npm run dev
    ```
-   API: [http://localhost:3000](http://localhost:3000)
+   (Runs the app in `apps/web`.) Site: [http://localhost:3000](http://localhost:3000)
 
 ### Admin tool
 
@@ -91,17 +90,14 @@ The storefront header shows **Sign in** / **Sign up** when logged out, and **Acc
 
 ### Mobile app (optional)
 
-The app in `mobile/` uses the API for products, cart, and orders.
+The app in `apps/mobile/` uses the API for products, cart, and orders.
 
 ```bash
-cd mobile
-npm install
-cp .env.example .env
-# Set EXPO_PUBLIC_API_URL (e.g. http://localhost:3000 or your machine IP for a physical device)
-npm start
+npm run mobile
+# Or: cd apps/mobile && npm install && cp .env.example .env && npm start
 ```
 
-Details: [mobile/README.md](mobile/README.md) (User ID for cart/orders, scripts).
+Set `EXPO_PUBLIC_API_URL` in `apps/mobile/.env` (e.g. `http://localhost:3000` or your deployed web API URL). Details: [apps/mobile/README.md](apps/mobile/README.md).
 
 ## API endpoints
 
@@ -130,27 +126,31 @@ Benefits: testability, clear dependencies, and the ability to swap infrastructur
 ## Deployment to Vercel
 
 1. Push the repo to GitHub and import it in [Vercel](https://vercel.com).
-2. Add environment variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
-3. Deploy. The project is configured via `vercel.json`.
+2. In the Vercel project, set **Root Directory** to `apps/web`.
+3. Add environment variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
+4. Deploy. The web app uses `apps/web/vercel.json`.
 
 ## Authentication
 
 The API currently uses an **`x-user-id`** header to identify the user (for cart and orders). For production, consider:
 
 - Supabase Auth or JWT
-- Resolving the user from the token in API routes (see `getUserId` in `app/api/cart/route.ts` and `app/api/orders/route.ts`)
+- Resolving the user from the token in API routes (see `getUserId` in `apps/web/app/api/cart/route.ts` and `apps/web/app/api/orders/route.ts`)
 
 ## Database schema
 
-Main tables: **products**, **carts**, **orders**. Full schema: [supabase/migrations/001_initial_schema.sql](supabase/migrations/001_initial_schema.sql).
+Main tables: **products**, **carts**, **orders**. Full schema: [apps/web/supabase/migrations/001_initial_schema.sql](apps/web/supabase/migrations/001_initial_schema.sql).
 
 ## Development
 
+From repo root (uses npm workspaces):
+
 ```bash
-npm run dev      # Start dev server
-npm run build    # Production build
-npm start        # Run production server
-npm run lint     # Lint
+npm run dev        # Start web app (apps/web)
+npm run build      # Build web app
+npm start          # Run web app production server
+npm run lint       # Lint web app
+npm run mobile     # Start Expo (apps/mobile)
 ```
 
 ## Contributing
