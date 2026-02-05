@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { GetProductByIdUseCase } from "@/application/use-cases/GetProductByIdUseCase";
 import { ProductRepository } from "@/infrastructure/repositories/ProductRepository";
@@ -27,12 +26,10 @@ export default async function ProductPage({
         <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm md:flex">
           <div className="relative aspect-square w-full bg-slate-100 md:max-w-md">
             {product.imageUrl ? (
-              <Image
+              <img
                 src={product.imageUrl}
                 alt={product.name}
-                fill
-                className="object-cover"
-                unoptimized
+                className="h-full w-full object-cover"
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-slate-400">

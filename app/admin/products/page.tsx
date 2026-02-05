@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { GetProductsUseCase } from "@/application/use-cases/GetProductsUseCase";
 import { ProductRepository } from "@/infrastructure/repositories/ProductRepository";
 import { ProductDeleteButton } from "./ProductDeleteButton";
@@ -58,13 +57,10 @@ export default async function AdminProductsPage() {
                     <div className="flex items-center gap-3">
                       {product.imageUrl ? (
                         <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded bg-slate-100">
-                          <Image
+                          <img
                             src={product.imageUrl}
                             alt=""
-                            width={40}
-                            height={40}
-                            className="object-cover"
-                            unoptimized
+                            className="h-full w-full object-cover"
                           />
                         </span>
                       ) : (

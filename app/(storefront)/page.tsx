@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { GetProductsUseCase } from "@/application/use-cases/GetProductsUseCase";
 import { ProductRepository } from "@/infrastructure/repositories/ProductRepository";
 
@@ -31,13 +30,10 @@ export default async function Home() {
                 <Link href={`/product/${product.id}`} className="block">
                   <div className="aspect-square bg-slate-100">
                     {product.imageUrl ? (
-                      <Image
+                      <img
                         src={product.imageUrl}
                         alt={product.name}
-                        width={400}
-                        height={400}
                         className="h-full w-full object-cover"
-                        unoptimized
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center text-slate-400">
