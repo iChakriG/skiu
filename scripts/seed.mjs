@@ -1,20 +1,21 @@
 /**
  * Seed products for development and demo.
- * Uploads product images to Supabase Storage and upserts products.
+ * Uploads product images from public/product-images to Supabase Storage and upserts products from scripts/seeds.
  * Run from project root: node scripts/seed.mjs
  * Requires .env with NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.
- * Optional: place images in scripts/product-images/ as product-101.png through product-110.png.
+ * Images: public/product-images/product-101.png … product-110.png (see scripts/seeds/README.md).
  */
 
 import { createClient } from "@supabase/supabase-js";
-import { readFileSync, existsSync, readdirSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
 const envPath = join(root, ".env");
-const imagesDir = join(__dirname, "product-images");
+const seedsDir = join(__dirname, "seeds");
+const imagesDir = join(root, "public", "product-images");
 const BUCKET = "product-images";
 
 if (existsSync(envPath)) {
@@ -41,19 +42,12 @@ const supabase = createClient(url, serviceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
 
-// 10 products: IDs 101–105 (original) + 106–110 (new)
-const PRODUCTS = [
-  { id: "11111111-1111-1111-1111-111111111101", shortId: "101", name: "Classic White Tee", description: "Soft cotton crew neck t-shirt. Unisex fit.", price: 24.99, category: "Clothing", stock: 50 },
-  { id: "11111111-1111-1111-1111-111111111102", shortId: "102", name: "Denim Jacket", description: "Medium wash denim jacket with button closure.", price: 89.99, category: "Clothing", stock: 20 },
-  { id: "11111111-1111-1111-1111-111111111103", shortId: "103", name: "Wireless Earbuds", description: "Noise-cancelling wireless earbuds with 24h battery.", price: 79.99, category: "Electronics", stock: 100 },
-  { id: "11111111-1111-1111-1111-111111111104", shortId: "104", name: "Leather Wallet", description: "Slim bifold wallet with card slots.", price: 45.00, category: "Accessories", stock: 75 },
-  { id: "11111111-1111-1111-1111-111111111105", shortId: "105", name: "Running Shoes", description: "Lightweight running shoes with cushioned sole.", price: 120.00, category: "Footwear", stock: 30 },
-  { id: "11111111-1111-1111-1111-111111111106", shortId: "106", name: "Vintage Sunglasses", description: "Polarized aviator-style sunglasses with metal frame.", price: 65.00, category: "Accessories", stock: 40 },
-  { id: "11111111-1111-1111-1111-111111111107", shortId: "107", name: "Cotton Hoodie", description: "Oversized pullover hoodie in soft fleece cotton.", price: 54.99, category: "Clothing", stock: 35 },
-  { id: "11111111-1111-1111-1111-111111111108", shortId: "108", name: "Smart Watch", description: "Fitness tracker with heart rate, GPS, and 7-day battery.", price: 199.99, category: "Electronics", stock: 25 },
-  { id: "11111111-1111-1111-1111-111111111109", shortId: "109", name: "Canvas Backpack", description: "Durable canvas backpack with laptop sleeve.", price: 72.00, category: "Accessories", stock: 45 },
-  { id: "11111111-1111-1111-1111-111111111110", shortId: "110", name: "Yoga Mat", description: "Non-slip eco-friendly yoga mat with carry strap.", price: 38.99, category: "Sports", stock: 60 },
-];
+const productsPath = join(seedsDir, "products.json");
+if (!existsSync(productsPath)) {
+  console.error("Missing scripts/seeds/products.json. Create it from scripts/seeds/README.md.");
+  process.exit(1);
+}
+const PRODUCTS = JSON.parse(readFileSync(productsPath, "utf8"));
 
 function findImagePath(shortId) {
   const base = join(imagesDir, `product-${shortId}`);
