@@ -15,6 +15,17 @@ export class OrderRepository implements IOrderRepository {
     return this.mapToOrder(data);
   }
 
+  async findAll(): Promise<Order[]> {
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error || !data) return [];
+
+    return data.map((item) => this.mapToOrder(item));
+  }
+
   async findByUserId(userId: string): Promise<Order[]> {
     const { data, error } = await supabase
       .from("orders")
