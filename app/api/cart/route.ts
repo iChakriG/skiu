@@ -4,6 +4,8 @@ import { AddToCartUseCase } from "@/application/use-cases/AddToCartUseCase";
 import { CartRepository } from "@/infrastructure/repositories/CartRepository";
 import { ProductRepository } from "@/infrastructure/repositories/ProductRepository";
 
+export const dynamic = "force-dynamic";
+
 // Helper to get userId from request (in a real app, extract from JWT token)
 function getUserId(request: NextRequest): string {
   // For now, using a header. In production, extract from auth token

@@ -6,6 +6,8 @@ import { DeleteProductUseCase } from "@/application/use-cases/DeleteProductUseCa
 import { ProductRepository } from "@/infrastructure/repositories/ProductRepository";
 import { Product } from "@/domain/entities/Product";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }

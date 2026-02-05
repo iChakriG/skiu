@@ -6,6 +6,8 @@ import { CartRepository } from "@/infrastructure/repositories/CartRepository";
 import { ProductRepository } from "@/infrastructure/repositories/ProductRepository";
 import { Address } from "@/domain/entities/Order";
 
+export const dynamic = "force-dynamic";
+
 // Helper to get userId from request
 function getUserId(request: NextRequest): string {
   const userId = request.headers.get("x-user-id");

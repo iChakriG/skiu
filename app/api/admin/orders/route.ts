@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/route-handler";
 import { GetAllOrdersUseCase } from "@/application/use-cases/GetAllOrdersUseCase";
 import { OrderRepository } from "@/infrastructure/repositories/OrderRepository";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient(request);

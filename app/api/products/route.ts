@@ -5,6 +5,8 @@ import { CreateProductUseCase } from "@/application/use-cases/CreateProductUseCa
 import { ProductRepository } from "@/infrastructure/repositories/ProductRepository";
 import { ProductFilters } from "@/domain/entities/Product";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;

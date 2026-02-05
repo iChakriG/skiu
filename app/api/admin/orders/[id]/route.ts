@@ -4,6 +4,8 @@ import { UpdateOrderStatusUseCase } from "@/application/use-cases/UpdateOrderSta
 import { OrderRepository } from "@/infrastructure/repositories/OrderRepository";
 import { OrderStatus } from "@/domain/entities/Order";
 
+export const dynamic = "force-dynamic";
+
 const VALID_STATUSES: OrderStatus[] = [
   OrderStatus.PENDING,
   OrderStatus.PROCESSING,

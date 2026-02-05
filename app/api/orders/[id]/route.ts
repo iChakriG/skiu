@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { OrderRepository } from "@/infrastructure/repositories/OrderRepository";
 import { Order } from "@/domain/entities/Order";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
