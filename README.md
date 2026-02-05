@@ -1,17 +1,27 @@
 # Skiu E-commerce Platform
 
-A modern e-commerce platform built with Next.js, TypeScript, Tailwind CSS, and Supabase PostgreSQL. Designed with clean architecture principles and optimized for mobile app integration.
+A full-stack e-commerce platform with a **Next.js API** and a **React Native (Expo) mobile app**. Built with TypeScript, Tailwind CSS, and Supabase PostgreSQL, using clean architecture.
 
-## 🚀 Features
+## Contents
 
-- **Clean Architecture**: Separation of concerns with domain, application, infrastructure, and presentation layers
-- **TypeScript**: Full type safety throughout the application
-- **Tailwind CSS**: Modern, responsive UI styling
-- **Supabase PostgreSQL**: Scalable database with Row Level Security
-- **RESTful API**: Mobile-friendly API endpoints
-- **Vercel Ready**: Optimized for deployment on Vercel
+- [Features](#-features)
+- [Project structure](#-project-structure)
+- [Setup](#-setup)
+- [API endpoints](#-api-endpoints)
+- [Architecture](#-architecture)
+- [Deployment](#-deployment-to-vercel)
+- [Development](#-development)
 
-## 📁 Project Structure
+## Features
+
+- **Clean architecture** — Domain, application, infrastructure, and presentation layers
+- **TypeScript** — End-to-end type safety
+- **RESTful API** — Products, cart, and orders; consumed by the mobile app
+- **React Native (Expo)** — Cross-platform mobile app in `mobile/`
+- **Supabase** — PostgreSQL database and optional auth
+- **Vercel-ready** — Configured for one-click deploy
+
+## Project structure
 
 | Folder | Purpose |
 |--------|--------|
@@ -20,164 +30,114 @@ A modern e-commerce platform built with Next.js, TypeScript, Tailwind CSS, and S
 | **application/** | **Use cases** (GetProducts, AddToCart, CreateOrder, etc.) |
 | **infrastructure/** | Supabase client and repository **implementations** |
 | **lib/** | Shared utilities |
-| **mobile/** | React Native (Expo) app — see [mobile/README.md](mobile/README.md) |
+| **mobile/** | React Native (Expo) app — [mobile/README.md](mobile/README.md) |
 | **supabase/** | SQL migrations |
 
 Full map and “where to find…” guide: **[STRUCTURE.md](STRUCTURE.md)**.
 
-## 🛠️ Setup
+## Setup
 
 ### Prerequisites
 
-- Node.js 18+ and npm
-- Supabase account and project
+- **Node.js 18+** and npm
+- **Supabase** account and project (for the API)
 
-### Installation
+### Backend (Next.js API)
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd skiu
-```
+1. **Clone and install**
+   ```bash
+   git clone https://github.com/iChakriG/skiu.git
+   cd skiu
+   npm install
+   ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+2. **Environment variables**
+   ```bash
+   cp .env.example .env
+   ```
+   Set in `.env`:
+   - `NEXT_PUBLIC_SUPABASE_URL` — your Supabase project URL  
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon key  
+   - `SUPABASE_SERVICE_ROLE_KEY` — Supabase service role key (if needed)
 
-3. Set up environment variables:
-```bash
-cp .env.example .env
-```
+3. **Database**
+   - In the [Supabase Dashboard](https://supabase.com/dashboard) → SQL Editor, run:
+   - `supabase/migrations/001_initial_schema.sql`
 
-Edit `.env` and add your Supabase credentials:
-```
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-```
+4. **Run the API**
+   ```bash
+   npm run dev
+   ```
+   API: [http://localhost:3000](http://localhost:3000)
 
-4. Set up the database:
-   - Go to your Supabase project dashboard
-   - Navigate to SQL Editor
-   - Run the migration file: `supabase/migrations/001_initial_schema.sql`
+### Mobile app (optional)
 
-5. Run the development server:
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### React Native (Expo) mobile app
-
-A mobile app in the `mobile/` folder consumes these APIs for products, cart, and orders.
+The app in `mobile/` uses the API for products, cart, and orders.
 
 ```bash
 cd mobile
 npm install
 cp .env.example .env
-# Set EXPO_PUBLIC_API_URL in .env (use your machine IP for physical devices)
+# Set EXPO_PUBLIC_API_URL (e.g. http://localhost:3000 or your machine IP for a physical device)
 npm start
 ```
 
-See [mobile/README.md](mobile/README.md) for setup, User ID (cart/orders), and scripts.
+Details: [mobile/README.md](mobile/README.md) (User ID for cart/orders, scripts).
 
-## 📱 API Endpoints
+## API endpoints
 
-### Products
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/products` | List products. Query: `category`, `minPrice`, `maxPrice`, `search` |
+| GET | `/api/products/[id]` | Product by ID |
+| GET | `/api/cart` | Get cart. Header: `x-user-id` |
+| POST | `/api/cart` | Add to cart. Header: `x-user-id`. Body: `{ "productId", "quantity" }` |
+| GET | `/api/orders` | List orders. Header: `x-user-id` |
+| POST | `/api/orders` | Create order. Header: `x-user-id`. Body: `{ "shippingAddress": { "street", "city", "state", "zipCode", "country" } }` |
+| GET | `/api/orders/[id]` | Order by ID |
+| GET | `/api/health` | Health check |
 
-- `GET /api/products` - Get all products (supports query params: `category`, `minPrice`, `maxPrice`, `search`)
-- `GET /api/products/[id]` - Get product by ID
+## Architecture
 
-### Cart
+Clean architecture layers:
 
-- `GET /api/cart` - Get user's cart (requires `x-user-id` header)
-- `POST /api/cart` - Add item to cart (requires `x-user-id` header)
-  ```json
-  {
-    "productId": "uuid",
-    "quantity": 1
-  }
-  ```
+1. **Domain** — Entities and repository interfaces (no framework code)
+2. **Application** — Use cases that depend only on domain
+3. **Infrastructure** — Supabase client and repository implementations
+4. **Presentation** — Next.js `app/` (API routes and pages)
 
-### Orders
+Benefits: testability, clear dependencies, and the ability to swap infrastructure (e.g. database) without changing business logic.
 
-- `GET /api/orders` - Get user's orders (requires `x-user-id` header)
-- `POST /api/orders` - Create new order (requires `x-user-id` header)
-  ```json
-  {
-    "shippingAddress": {
-      "street": "123 Main St",
-      "city": "New York",
-      "state": "NY",
-      "zipCode": "10001",
-      "country": "USA"
-    }
-  }
-  ```
-- `GET /api/orders/[id]` - Get order by ID
+## Deployment to Vercel
 
-## 🏗️ Architecture
+1. Push the repo to GitHub and import it in [Vercel](https://vercel.com).
+2. Add environment variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
+3. Deploy. The project is configured via `vercel.json`.
 
-This project follows Clean Architecture principles:
+## Authentication
 
-1. **Domain Layer**: Contains business entities and repository interfaces
-2. **Application Layer**: Contains use cases (business logic)
-3. **Infrastructure Layer**: Contains implementations (Supabase repositories)
-4. **Presentation Layer**: Contains API routes and UI components
+The API currently uses an **`x-user-id`** header to identify the user (for cart and orders). For production, consider:
 
-This separation ensures:
-- Testability
-- Maintainability
-- Flexibility to change implementations
-- Clear dependencies
+- Supabase Auth or JWT
+- Resolving the user from the token in API routes (see `getUserId` in `app/api/cart/route.ts` and `app/api/orders/route.ts`)
 
-## 🚢 Deployment to Vercel
+## Database schema
 
-1. Push your code to GitHub
-2. Import your repository in Vercel
-3. Add environment variables in Vercel dashboard:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-4. Deploy!
+Main tables: **products**, **carts**, **orders**. Full schema: [supabase/migrations/001_initial_schema.sql](supabase/migrations/001_initial_schema.sql).
 
-The project is already configured for Vercel with `vercel.json`.
-
-## 🔐 Authentication
-
-Currently, the API uses a simple `x-user-id` header for user identification. For production, you should:
-
-1. Implement JWT authentication
-2. Use Supabase Auth
-3. Extract user ID from the authenticated token
-4. Update the `getUserId` helper functions in API routes
-
-## 📝 Database Schema
-
-- **products**: Product catalog
-- **carts**: User shopping carts
-- **orders**: Order history
-
-See `supabase/migrations/001_initial_schema.sql` for the complete schema.
-
-## 🧪 Development
+## Development
 
 ```bash
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Lint code
-npm run lint
+npm run dev      # Start dev server
+npm run build    # Production build
+npm start        # Run production server
+npm run lint     # Lint
 ```
 
-## 📄 License
+## Contributing
 
-See LICENSE file for details.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## License
+
+See [LICENSE](LICENSE).
