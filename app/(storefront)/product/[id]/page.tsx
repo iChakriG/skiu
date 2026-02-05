@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { GetProductByIdUseCase } from "@/application/use-cases/GetProductByIdUseCase";
 import { ProductRepository } from "@/infrastructure/repositories/ProductRepository";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProductPage({
   params,
 }: {
@@ -29,7 +31,10 @@ export default async function ProductPage({
               <img
                 src={product.imageUrl}
                 alt={product.name}
+                width={400}
+                height={400}
                 className="h-full w-full object-cover"
+                referrerPolicy="no-referrer"
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-slate-400">

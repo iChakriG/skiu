@@ -31,6 +31,7 @@ export function ProductForm({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [previewError, setPreviewError] = useState(false);
   const [form, setForm] = useState<ProductFormData>({
     ...defaultValues,
     ...initial,
@@ -167,9 +168,31 @@ export function ProductForm({
           id="imageUrl"
           type="url"
           value={form.imageUrl}
-          onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
+          onChange={(e) => {
+            setForm((f) => ({ ...f, imageUrl: e.target.value }));
+            setPreviewError(false);
+          }}
           className="w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
         />
+        {form.imageUrl.trim() ? (
+          <>
+            <p className="mt-1 text-xs text-slate-500">Preview:</p>
+            <div className="mt-1 flex h-24 w-24 items-center justify-center overflow-hidden rounded border border-slate-200 bg-slate-50">
+              {previewError ? (
+                <span className="text-xs text-slate-400">Could not load</span>
+              ) : (
+                <img
+                  src={form.imageUrl.trim()}
+                  alt="Preview"
+                  className="h-full w-full object-cover"
+                  referrerPolicy="no-referrer"
+                  onError={() => setPreviewError(true)}
+                  onLoad={() => setPreviewError(false)}
+                />
+              )}
+            </div>
+          </>
+        ) : null}
       </div>
 
       <div className="flex gap-3">

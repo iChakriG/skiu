@@ -3,6 +3,8 @@ import { GetProductsUseCase } from "@/application/use-cases/GetProductsUseCase";
 import { ProductRepository } from "@/infrastructure/repositories/ProductRepository";
 import { ProductDeleteButton } from "./ProductDeleteButton";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminProductsPage() {
   const productRepository = new ProductRepository();
   const products = await new GetProductsUseCase(productRepository).execute({});
@@ -56,11 +58,15 @@ export default async function AdminProductsPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {product.imageUrl ? (
-                        <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded bg-slate-100">
+                        <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded bg-slate-100">
                           <img
                             src={product.imageUrl}
                             alt=""
+                            width={40}
+                            height={40}
                             className="h-full w-full object-cover"
+                            referrerPolicy="no-referrer"
+                            loading="lazy"
                           />
                         </span>
                       ) : (

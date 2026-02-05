@@ -104,7 +104,7 @@ export class ProductRepository implements IProductRepository {
       name: data.name,
       description: data.description,
       price: data.price,
-      imageUrl: data.image_url,
+      imageUrl: data.image_url ?? data.imageUrl ?? "",
       category: data.category,
       stock: data.stock,
       createdAt: new Date(data.created_at),

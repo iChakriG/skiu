@@ -4,6 +4,8 @@ import { GetProductByIdUseCase } from "@/application/use-cases/GetProductByIdUse
 import { ProductRepository } from "@/infrastructure/repositories/ProductRepository";
 import { ProductForm } from "../../ProductForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function EditProductPage({
   params,
 }: {

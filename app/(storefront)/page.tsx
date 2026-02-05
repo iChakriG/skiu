@@ -2,6 +2,8 @@ import Link from "next/link";
 import { GetProductsUseCase } from "@/application/use-cases/GetProductsUseCase";
 import { ProductRepository } from "@/infrastructure/repositories/ProductRepository";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const productRepository = new ProductRepository();
   const products = await new GetProductsUseCase(productRepository).execute({});
@@ -33,7 +35,11 @@ export default async function Home() {
                       <img
                         src={product.imageUrl}
                         alt={product.name}
+                        width={400}
+                        height={400}
                         className="h-full w-full object-cover"
+                        referrerPolicy="no-referrer"
+                        loading="lazy"
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center text-slate-400">
